@@ -9,7 +9,7 @@ library(dplyr); library(lubridate); library(geosphere)
 # Filter based on residual and time error, and apply speed filter (5ms-1):
 
 # List all files in the directory
-file_list <- list.files("/Users/tamsin/Desktop/Manuscript/All_Fastloc_GPS")
+file_list <- list.files("file_path_here")
 # Initialize the 'removed' dataframe
 removed <- data.frame()
 
@@ -19,7 +19,7 @@ cleaned_data <- list()
 # Loop through each file in the list
 for(file in file_list) {
   # Construct the full file path
-  file_path <- file.path("/Users/tamsin/Desktop/Manuscript/All_Fastloc_GPS", file)
+  file_path <- file.path("file_path_here", file)
   # Read the data frame from the file
   df <- read.csv(file_path) 
   
@@ -106,20 +106,3 @@ df_252778 <- df_252778 %>% filter(datetime <= cutoff_252778)
 df_252779 <- df_252779 %>% filter(datetime <= cutoff_252779)
 
 
-## EXPORT AND SAVE DATA ========================================================
-
-# Merge all data frames
-df_all <- bind_rows(df_252520, df_252525, df_252778) # Only including data with enough locations (>15)
-
-# Write each data frame to a CSV file
-output_dir <- "/Users/tamsin/Desktop/Manuscript/Data/Cleaned_GPS/"
-write.csv(df_252520, file = paste0(output_dir, "df_252520.csv"), row.names = FALSE)
-write.csv(df_252522, file = paste0(output_dir, "df_252522.csv"), row.names = FALSE)
-write.csv(df_252525, file = paste0(output_dir, "df_252525.csv"), row.names = FALSE)
-write.csv(df_252528, file = paste0(output_dir, "df_252528.csv"), row.names = FALSE)
-write.csv(df_252778, file = paste0(output_dir, "df_252778.csv"), row.names = FALSE)
-write.csv(df_252779, file = paste0(output_dir, "df_252779.csv"), row.names = FALSE)
-write.csv(df_all, file = paste0(output_dir, "df_all.csv"), row.names = FALSE)
-
-setwd("/Users/tamsin/Desktop/Manuscript/RDA_files") #Set working directory to save RDA file
-save(df_252520,df_252525,df_252778, df_all, file = "horizontal01.RDA")
