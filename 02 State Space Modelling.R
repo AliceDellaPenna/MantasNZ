@@ -5,7 +5,7 @@ library(rnaturalearth); library(rnaturalearthdata); library(rnaturalearthhires)
 library(dplyr); library(pathroutr)
 library(sf)
 
-load("horizontal01.RDA")
+load("data")
 
 ## STATE SPACE MODELLING =======================================================
 # Fitting the move persistence model to each tag individually
@@ -187,9 +187,3 @@ manta_df <- left_join(rerouted_df, manta_mp_df %>% dplyr::select(datetime, id, g
 
 
 
-## SAVE FILE ===================================================================
-write.csv(manta_df, file = "/Users/tamsin/Desktop/Manuscript/Data/ssm_manta.csv")
-
-
-setwd("/Users/tamsin/Desktop/Manuscript/RDA_files") #Set working directory to save RDA file
-save(manta_df, file = "horizontal02.RDA")
