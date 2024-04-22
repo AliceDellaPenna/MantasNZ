@@ -18,14 +18,13 @@ names(manta_df)
 gam_d_df <- manta_df %>% filter(period == "day")
 
 gam_d <- gam(g ~
-              s(wind_dir, bs = 'cc', k = 6) +
+              s(wind_direction, bs = 'cc', k = 6) +
               s(wind_speed, k = 6) +
               s(altitude, k = 6) + 
               s(kd490, k = 6) +
               s(bathy, k = 6) +
               s(sst, k = 6) +
               factor(tide_category) +
-              factor(sex) +
               factor(id),
             data = gam_d_df,
             method = "REML",
@@ -39,14 +38,13 @@ plot(gam_d, all.terms = TRUE, pages = 1, scale = 0, shade = 1)
 gam_n_df <- manta_df %>% filter(period == "night")
 
 gam_n <- gam(g ~
-               s(wind_dir, bs = 'cc', k = 6) +
+               s(wind_direction, bs = 'cc', k = 6) +
                s(wind_speed, k = 6) +
-               s(moonfraction.fraction, k = 6) + 
+               s(fraction, k = 6) + 
                s(kd490, k = 6) +
                s(bathy, k = 6) +
                s(sst, k = 6) +
                factor(tide_category) +
-               factor(sex) +
                factor(id),
              data = gam_n_df,
              method = "REML",
