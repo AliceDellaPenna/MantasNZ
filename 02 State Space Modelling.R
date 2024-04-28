@@ -52,7 +52,8 @@ combined_df <- bind_rows(
 
 ## REROUTING THE DATA ==========================================================
 # For when wrapper function in aniMotum package doesn't work due to complexity of study area
-# Code replicated from Harbour Seal Vignette to reroute data around land (London)
+# Code replicated from Harbour Seal Vignette to reroute data around land (London, 2021)
+# See vignette at: (https://jmlondon.github.io/pathroutr/articles/akharborseal_demo.html)
 
 # Prep -------------------------------------------------------------------------
 # Read in the NZ coastlines shapefile
