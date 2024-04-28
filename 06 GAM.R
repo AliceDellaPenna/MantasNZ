@@ -14,7 +14,7 @@ manta_df$g <- 1 - manta_df$g # Transform g so it is 1-g so that we are looking a
 manta_df$id <- as.character(manta_df$id); class(manta_df$id) #Check id is the right class
 names(manta_df)
 
-## ===== FINAL GAM (DAY) =======================================================
+## FINAL GAM (DAY) ============================================================
 gam_d_df <- manta_df %>% filter(period == "day")
 
 gam_d <- gam(g ~
@@ -34,7 +34,7 @@ summary(gam_d)
 plot(gam_d, all.terms = TRUE, pages = 1, scale = 0, shade = 1)
 
 
-## ===== FINAL GAM (NIGHT) =====================================================
+## FINAL GAM (NIGHT) =========================================================
 gam_n_df <- manta_df %>% filter(period == "night")
 
 gam_n <- gam(g ~
@@ -54,7 +54,7 @@ summary(gam_n)
 plot(gam_n, all.terms = TRUE, pages = 1, scale = 0, shade = 1)
 
 
-## ===== VISUALISING GAM (DAY) =================================================
+## VISUALISING GAM (DAY) =====================================================
 # evaluate the smooths
 sm_d <- smooth_estimates(gam_d) %>%
   add_confint()
