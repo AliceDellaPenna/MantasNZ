@@ -82,12 +82,6 @@ df_252779 <- cleaned_data$"df_252779"
 ## SUBSET TO DATA OF INTEREST ==================================================
 # Remove data following detachment, or exit from study boundaries (visually identified)
 
-# Set datetime to POSIXct class: 
-for(file in names(cleaned_data)) {
-  # Convert datetime column to POSIXct class
-  cleaned_data[[file]]$datetime <- as.POSIXct(cleaned_data[[file]]$datetime, tz = "UTC")
-}
-
 # Select cutoff points 
 # (Based on detatch time / exit from study boundaries visually identified in QGIS:)
 cutoff_252520 <- as.POSIXct("2024-02-03 12:00:00", tz = "UTC") 
