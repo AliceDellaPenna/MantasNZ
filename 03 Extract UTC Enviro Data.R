@@ -3,7 +3,7 @@
 library(suncalc); library(geosphere); library(dplyr); library(lubridate); library(readr)
 
 #Set working directory
-setwd("RDA_files") 
+setwd("/Users/tamsin/Files/Manuscript/RDA_files") 
 # Load in the data from 02 State Space Modelling output
 load("horizontal02.RDA")
 
@@ -18,7 +18,7 @@ load("horizontal02.RDA")
 
 # This data is collected in UTC - Important that data is also in UTC. 
 # Import data frame including weather stations with lat lon coordinates
-weather_stations <- read.csv("wind_stations.csv")
+weather_stations <- read.csv("/Users/tamsin/Files/Manuscript/Data/Environmental/Wind/wind_stations.csv")
 
 # Find closest weather station for each manta GPS point: -----------------------
 # Function to calculate distance in meters between two GPS points
@@ -50,7 +50,7 @@ for (i in 1:nrow(manta_df)) {
 
 # Extract wind data from closest station: --------------------------------------
 # Load in wind data for each weather station 
-input_dir <- "Wind/"
+input_dir <- "/Users/tamsin/Files/Manuscript/Data/Environmental/Wind/"
 NZGMW <- read.csv(file = paste0(input_dir, "wind_NZGMW.csv"))
 NZSLW <- read.csv(file = paste0(input_dir, "wind_NZSLW.csv"))
 NZCLW <- read.csv(file = paste0(input_dir, "wind_NZCLW.csv"))
@@ -65,7 +65,7 @@ NZMUX$datetime <- as.POSIXct(NZMUX$datetime, format = "%d/%m/%y %H:%M")
 NZCLW$datetime <- as.POSIXct(NZCLW$datetime, format = "%d/%m/%y %H:%M")
 NZUQF$datetime <- as.POSIXct(NZUQF$datetime, format = "%d/%m/%y %H:%M")
 
-# Filter manta_df data for each tide station individually
+# Filter manta_df data for each wind station individually
 for (station_name in unique(manta_df$Closest_Station)) {
   # Get the wind data frame for the current weather station
   current_wind_data <- get(paste0(station_name))
@@ -131,58 +131,44 @@ manta_df <- rbind(
 # This data is collected in GMT/UTC - Important that data is also in UTC.
 
 # Import data frame with tidal station coordinates
-tidal_stations <- read.csv("tidestations24.csv")
+tidal_stations <- read.csv("/Users/tamsin/Files/Manuscript/Data/Environmental/Tide/Tide_Stations.csv")
 
-# Find closest tidal station for each manta GPS point
-# Function to calculate distance in meters between two GPS points
-calculate_distance <- function(lat1, lon1, lat2, lon2) {
+# Calculate closest tide station for each manta GPS point
+calculate_distance <- function(lat1, lon1, lat2, lon2) { # Calculate Distances
   distVincentyEllipsoid(c(lon1, lat1), c(lon2, lat2))
 }
 
-# Create an empty column to store the closest tidal station for each GPS point
-manta_df$Closest_Tide_Station <- NA  
-
-# Loop through each GPS point in the animal tracking data
-for (i in 1:nrow(manta_df)) {
-  # Calculate the distances to each weather station
+manta_df$Closest_Tide_Station <- sapply(1:nrow(manta_df), function(i) { # Find Closest Station
   distances <- sapply(1:nrow(tidal_stations), function(j) {
     calculate_distance(
-      manta_df$lat[i],
-      manta_df$lon[i],
-      tidal_stations$lat[j],
-      tidal_stations$lon[j]
+      manta_df$lat[i], manta_df$lon[i],
+      tidal_stations$lat[j], tidal_stations$lon[j]
     )
   })
-  
-  # Find the index of the closest tidal station
-  closest_index <- which.min(distances)
-  
-  # Assign the closest tide station to the corresponding row in the data frame
-  manta_df$Closest_Tide_Station[i] <- tidal_stations$Station[closest_index]
-}  
+  tidal_stations$Station[which.min(distances)]  # Assign station name
+})
 
 ### Load in tide data:----------------------------------------------------------
 # Define the directory where tide CSV files are located
-input_dir <- "/tide_compiled_csv/"
+input_dir <- "/Users/tamsin/Files/Manuscript/Data/Environmental/Tide/tide_compiled_csv/"
 
 # Initialize an empty list to store the data frames
 tide_data <- list()
 
 # Loop through each file and read it into a data frame
-for (i in 1:21) {
+for (i in 1:37) {
   # Read CSV file for each tide station
   tide_data[[i]] <- read.csv(file.path(input_dir, paste0("tide_", sprintf("%02d", i), ".csv")))
   
   # Convert datetime column to POSIXct
-  tide_data[[i]]$datetime <- as.POSIXct(tide_data[[i]]$datetime, format = "%d/%m/%y %H:%M", tz = "UTC")
+  tide_data[[i]]$datetime <- as.POSIXct(tide_data[[i]]$datetime, format = "%d/%m/%Y %H:%M", tz = "UTC")
   
   # Subset data to remove rows where value < 1 (high tide)
   tide_data[[i]] <- tide_data[[i]][tide_data[[i]]$value >= 1, ]
 }
 
-
 # Filter manta_df data for each tide station individually
-for (station_num in 1:21) {  # Assuming you have 21 tidal stations
+for (station_num in 1:37) {  # Assuming you have 21 tidal stations
   # Get the data frame for the current tide station
   current_tide_data <- manta_df[manta_df$Closest_Tide_Station == station_num, ]
   
@@ -224,12 +210,12 @@ for (station_num in 1:21) {  # Assuming you have 21 tidal stations
 # The updated data frames for each tidal station are now saved as tide_1_matched, tide_2_matched, etc.
 
 # Combine all tide dataframes into one big dataframe
-manta_df <- do.call(rbind, lapply(1:21, function(x) get(paste0("tide_", x, "_matched"))))
+manta_df <- do.call(rbind, lapply(1:37, function(x) get(paste0("tide_", x, "_matched"))))
 
 ### Categorise tide: -----------------------------------------------------------
 # Create a new column 'tide_category' to categorise data as either 'falling' 'rising' or 'slack' tide
 manta_df$tide_category <- ifelse(manta_df$time_to_hightide <= -0.5, 'falling',
-                                         ifelse(manta_df$time_to_hightide >= 0.5, 'rising', 'slack'))
+                                 ifelse(manta_df$time_to_hightide >= 0.5, 'rising', 'slack'))
 
 ## MOON PHASE ==================================================================
 manta_df$date <- as.Date(manta_df$datetime, tz = "UTC")
@@ -263,6 +249,6 @@ manta_df <- merge(manta_df, sun[, c("date", "lat", "lon", "altitude")], by.x = c
 
 
 ## CLEAN AND SAVE DATA  ========================================================
-setwd("RDA_files") #Set working directory to save RDA file
+setwd("/Users/tamsin/Files/Manuscript/RDA_Files/") #Set working directory to save RDA file
 save(manta_df, file = "horizontal03.RDA")
 
