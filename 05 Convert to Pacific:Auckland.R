@@ -1,5 +1,6 @@
 ## PREP ========================================================================
 library(suncalc); library(dplyr); library(lubridate)
+setwd("/Users/tamsin/Files/Manuscript/RDA_files")
 load("horizontal04.RDA")
 
 ## CONVERT TO PACIFIC/AUCKLAND TIME  ===========================================
@@ -24,7 +25,7 @@ date_sequence <- seq(from = as.POSIXct(first_date, tz = timezone),
 
 # Create a data frame with the dates
 date_df <- data.frame(Date = date_sequence)
-date_df$lon <- 175.25; date_df$lat=-36.275 #Set mean geolocation
+date_df$lon <- 175.25; date_df$lat=-36.5 #Set mean geolocation
 date_df$date <- as.Date(date_df$Date)
 date_df <- subset(date_df, select = -Date)
 
