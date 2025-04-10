@@ -5,7 +5,7 @@ library(rnaturalearth); library(rnaturalearthdata); library(rnaturalearthhires)
 library(dplyr); library(pathroutr); library(sf)
 
 #Set working directory
-setwd("RDA_files") 
+setwd("/Users/tamsin/Files/Manuscript/RDA_files")
 load("horizontal01.RDA")
 
 ## STATE SPACE MODELLING =======================================================
@@ -28,7 +28,7 @@ ssm_all_df <- grab(ssm_all, what = "predicted", as_sf = FALSE)
 
 # Prep -------------------------------------------------------------------------
 # Read in the NZ coastlines shapefile
-nzcoast <- sf::read_sf("nz-coastlines-and-islands-polygons-4326.shp")
+nzcoast <- sf::read_sf("/Users/tamsin/Files/Manuscript/QGIS/Shapefiles/NZ Coastlines and Islands/nz-coastlines-and-islands-polygons-4326.shp")
 nzcoast <- sf::st_make_valid(nzcoast)
 
 # Convert the data frame to an sf object
@@ -143,11 +143,7 @@ rerouted_df$id <- as.character(rerouted_df$id)
 # Infer move persistence
 manta_mp <- fit_mpm(rerouted_df,
                     what = "fitted",
-                    model = "mpm")
-plot(manta_mp, 
-     what = "fitted", 
-     type = 2,
-     normalise = FALSE)
+                    model = "jmpm")
 
 # Extract the data for further analysis
 manta_mp_df <- grab(manta_mp, what = "fitted", as_sf = FALSE, normalise = TRUE, group = FALSE)
@@ -158,5 +154,9 @@ manta_mp_df <- manta_mp_df %>%
 manta_df <- left_join(rerouted_df, manta_mp_df %>% dplyr::select(datetime, id, g), by = c("datetime", "id"))
 
 ## SAVE FILE ===================================================================
-setwd("RDA_files") #Set working directory to save RDA file
+# Save to csv
+write.csv(manta_df, "/Users/tamsin/Files/Manuscript/Data/SSM.csv")
+
+setwd("/Users/tamsin/Files/Manuscript/RDA_files") #Set working directory to save RDA file
 save(manta_df, file = "horizontal02.RDA")
+
