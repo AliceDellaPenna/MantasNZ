@@ -2,7 +2,7 @@
 # Load required libraries
 library(raster); library(ncdf4)
 
-setwd("RDA_files") #Set working directory
+setwd("/Users/tamsin/Files/Manuscript/RDA_files") #Set working directory
 load("horizontal03.RDA")
 
 # Create a layername column to match to the rasterstack 
@@ -14,83 +14,40 @@ manta_df$layername <- paste0("X", manta_df$layername) # Add the 'X' prefix
 manta_df$layername2 <- format(manta_df$datetime, "X%Y.%m.%d.%H")
 manta_df$layername2 <- as.character(manta_df$layername2)
 
-## KD490_23 ====================================================================
-# As KD490 was extracted for two different samples the data set has two different spatial extents
-# Therefore cannot be stacked together - so do as two seperate extractions: 
-
+## KD490 =======================================================================
 # Set your working directory
-setwd("kd490_23")
+setwd("/Users/tamsin/Files/Manuscript/Data/Environmental/KD490")
 
 # List the files in the .nc folder 
-kd.list_23 = list.files("kd490_23", 
-                     pattern = '.nc$', all.files=TRUE,full.names = FALSE)
+kd.list = list.files("/Users/tamsin/Files/Manuscript/Data/Environmental/KD490", 
+                     pattern = '.nc$', all.files=TRUE, full.names = FALSE)
 
 # Import all .nc files in the folder - lapply with raster so we import as raster layers 
 # output should be a list item with each list item being a raster layer 
-kdrasters_23 <- lapply(kd.list_23, raster)
+kdrasters <- lapply(kd.list, raster, varname="KD490")
 
 # Stack the rasters into a list (this will convert from list --> raster brick)
 # only if you have multiple layers 
-kdrasters_23 <- stack(kdrasters_23)
+kdrasters <- stack(kdrasters)
 
 # Rename the rasters to correspond with the correct date. 
 # Extract dates from raster layer data
-dates <- sapply(1:nlayers(kdrasters_23), function(i) {
-  date <- as.character(kdrasters_23@layers[[i]]@z[[1]])
+dates <- sapply(1:nlayers(kdrasters), function(i) {
+  date <- as.character(kdrasters@layers[[i]]@z[[1]])
   return(date)
 })
 
 # Assign the extracted dates to the layer names
-names(kdrasters_23) <- format(as.Date(dates, format = "%Y-%m-%d"), "%Y-%m-%d")
-names(kdrasters_23) # Check the assigned names
+names(kdrasters) <- format(as.Date(dates, format = "%Y-%m-%d"), "%Y-%m-%d")
+names(kdrasters) # Check the assigned names
 
 # Extracting the raster value within the chlraster at longitude and latitude that matches the layername 
-manta_df$kd490 <- raster::extract(kdrasters_23, cbind(manta_df$lon, manta_df$lat))[
-  cbind(1:nrow(manta_df),match(manta_df$layername, names(kdrasters_23)))
-]
-
-## KD490_24=====================================================================
-# Set your working directory
-setwd("kd490_24")
-
-# List the files in the .nc folder 
-kd.list_24 = list.files("kd490_24", 
-                        pattern = '.nc$', all.files=TRUE,full.names = FALSE)
-
-# Import all .nc files in the folder - lapply with raster so we import as raster layers 
-# output should be a list item with each list item being a raster layer 
-kdrasters_24 <- lapply(kd.list_24, raster)
-
-# Stack the rasters into a list (this will convert from list --> raster brick)
-# only if you have multiple layers 
-kdrasters_24 <- stack(kdrasters_24)
-
-# Rename the rasters to correspond with the correct date. 
-# Extract dates from raster layer data
-dates <- sapply(1:nlayers(kdrasters_24), function(i) {
-  date <- as.character(kdrasters_24@layers[[i]]@z[[1]])
-  return(date)
-})
-
-# Assign the extracted dates to the layer names
-names(kdrasters_24) <- format(as.Date(dates, format = "%Y-%m-%d"), "%Y-%m-%d")
-names(kdrasters_24) # Check the assigned names
-
-# Extracting the raster values within the kdrasters_24 at longitude and latitude that match the layername 
-new_values <- raster::extract(kdrasters_24, cbind(manta_df$lon, manta_df$lat))[
-  cbind(1:nrow(manta_df), match(manta_df$layername, names(kdrasters_24)))
-]
-
-# Only update the NaN values in manta_df$kd490 with the new values
-manta_df$kd490[is.na(manta_df$kd490)] <- new_values[is.na(manta_df$kd490)]
-
+manta_df$kd490 <- raster::extract(kdrasters, cbind(manta_df$lon, manta_df$lat))[
+  cbind(1:nrow(manta_df),match(manta_df$layername, names(kdrasters)))]
 
 ## BATHY =======================================================================
-# As bathymetry data is higher res for in the gulf, but we were unable to obtain this for the wider gulf region
-# Prioritise the high res dataset, and fill in with lower res where it is not covered
-
 # Read the TIF file as a raster layer
-bathy_raster <- raster("Hauraki_Bathymetry_20m.tif")
+bathy_raster <- raster("/Users/tamsin/Files/Manuscript/Data/Environmental/Bathymetry/Hauraki_Bathymetry_20m.tif")
 
 # Check the raster layer format
 names(bathy_raster)
@@ -104,7 +61,7 @@ plot(bathy_raster[[1]])
 manta_df$bathy <- raster::extract(bathy_raster, cbind(manta_df$lon, manta_df$lat))
 
 ### Prepare bathymetry data for out of gulf ------------------------------------
-bathyoog <- raster("Gebco_Bathymetry.tif")
+bathyoog <- raster("/Users/tamsin/Files/Manuscript/Data/Environmental/Bathymetry/Gebco_Bathymetry.tif")
 
 # Check the raster layer format
 names(bathyoog)
@@ -124,12 +81,12 @@ manta_df$bathyoog <- NULL
 # Set bathymetry values over 1 to 0 (Because the bathymetry raster is only to 20m)
 manta_df$bathy[manta_df$bathy > 1] <- 0
 
-## SST_23 ======================================================================
+## SST =========================================================================
 # Set your working directory
-setwd("sst_23")
+setwd("/Users/tamsin/Files/Manuscript/Data/Environmental/SST")
 
 # List the files in the .nc folder
-sst.list <- list.files("sst_23", pattern = '.nc$', full.names = TRUE)
+sst.list <- list.files("/Users/tamsin/Files/Manuscript/Data/Environmental/SST", pattern = '.nc$', full.names = TRUE)
 
 # Initialize an empty list to store the individual raster layers
 sstrasters <- list()
@@ -191,81 +148,10 @@ manta_df$sst <- raster::extract(sstmean, cbind(manta_df$lon, manta_df$lat))[
   cbind(1:nrow(manta_df),match(manta_df$layername2, names(sstmean)))
 ]
 
-## SST_24 ======================================================================
-# Set your working directory
-setwd("sst_24")
-
-# List the files in the .nc folder
-sst.list <- list.files("sst_24", pattern = '.nc$', full.names = TRUE)
-
-# Initialize an empty list to store the individual raster layers
-sstrasters <- list()
-
-# Iterate through the list of file paths and read each file with the specified variable name as a raster layer
-for (file_path in sst.list) {
-  raster_data <- raster::raster(file_path, varname = "SST")
-  sstrasters[[file_path]] <- raster_data
-}
-
-# Stack the rasters into a list (this will convert from list --> raster brick)
-# only if you have multiple layers 
-sstrasters <- stack(sstrasters)
-
-# Rename the rasters to correspond with the correct date. 
-# Extract dates from raster layer data
-dates <- sapply(1:nlayers(sstrasters), function(i) {
-  date <- as.character(sstrasters@layers[[i]]@z[[1]])
-  return(date)
-})
-
-# Assign the extracted dates to the layer names
-names(sstrasters) <- as.character(dates)
-names(sstrasters) <- substr(names(sstrasters), 1, nchar(names(sstrasters)) - 6) # Remove extra characters
-names(sstrasters)
-
-plot(sstrasters[[540]]) # Plot layers here to check data
-
-### Average data over six hours ------------------------------------------------
-# SST is collected every hour - 
-# aggregate data into six hour periods so that more locations return data points. 
-###
-
-# Define indices to aggregate data
-hours <- as.numeric(substr(names(sstrasters), 13, 14)) # Extract hours from raster layer names
-desired_break_hours <- c(6, 12, 18, 00) # Define the desired break hours
-breaks <- c(0, which(hours %in% desired_break_hours), length(hours)) # Find the breaks in hours
-
-# Create indices grouping layers into intervals based on breaks
-indices <- rep(seq_along(breaks[-length(breaks)]), diff(breaks))
-
-# Perform aggregation using stackApply with breaks
-sstmean <- stackApply(sstrasters, indices, fun = mean, na.rm = TRUE)
-sstmean_stack <- stack(sstmean)
-
-# Rename the layers based on the last layer of each group
-original_dates <- names(sstrasters)  # Extract the dates from the original sstrasters stack
-layer_indices <- breaks[-length(breaks)] 
-layer_names <- original_dates[layer_indices]
-
-names(sstmean) <- layer_names
-names(sstmean)
-
-plot(sstmean[[90]]) # Plot layers here to check data
-
-### Extracting the data --------------------------------------------------------
-# Extracting the raster values within the sstmean_stack at longitude and latitude that match the layername 
-
-# Extract SST values from sst_24
-sst_24_values <- raster::extract(sstmean, cbind(manta_df$lon, manta_df$lat))[
-  cbind(1:nrow(manta_df), match(manta_df$layername2, names(sstmean)))
-]
-
-# Update sst column only where sst_24 values are not NA
-manta_df$sst <- ifelse(!is.na(sst_24_values), sst_24_values, manta_df$sst)
-
 # Convert from Kelvin to Celsius
 manta_df$sst <- manta_df$sst - 273.15
 
 ## SAVE FILE ===================================================================
-setwd("RDA_files") #Set working directory to save RDA file
+setwd("/Users/tamsin/Files/Manuscript/RDA_files") #Set working directory to save RDA file
 save(manta_df, file = "horizontal04.RDA")
+
