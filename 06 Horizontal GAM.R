@@ -35,8 +35,8 @@ manta_df$year<- substr(manta_df$datetime, 1, 4)
 manta_df$year <- as.character(manta_df$year); class(manta_df$year) #Check id is the right class (chr)
 
 # Add sex as a categorical value
-manta_df$sex <- ifelse(manta_df$id %in% c(14, 17, 19, 20, 21, 22, 23, 24 ), "Female",
-                       ifelse(manta_df$id %in% c(9, 15, 16, 18, 25), "Male", NA))
+manta_df$sex <- ifelse(manta_df$id %in% c(14, 17, 19, 20, 21, 23, 24, 25 ), "Female",
+                       ifelse(manta_df$id %in% c(9, 15, 16, 18, 22), "Male", NA))
 manta_df$sex <- as.character(manta_df$sex); class(manta_df$sex) #Check sex is the right class (chr)
 
 ## FINAL GAM (DAY) =============================================================
