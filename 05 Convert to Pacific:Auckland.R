@@ -1,6 +1,6 @@
 ## PREP ========================================================================
 library(suncalc); library(dplyr); library(lubridate)
-setwd("/Users/tamsin/Files/Manuscript/RDA_files")
+setwd("RDA_files")
 load("horizontal04.RDA")
 
 ## CONVERT TO PACIFIC/AUCKLAND TIME  ===========================================
