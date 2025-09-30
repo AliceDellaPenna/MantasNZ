@@ -8,7 +8,7 @@ library(dplyr); library(lubridate); library(geosphere)
 # Filter based on residual and time error, and apply speed filter (5ms-1):
 
 # List all files in the directory
-file_list <- list.files("/Users/tamsin/Files/Manuscript/Data/Fastloc_Raw")
+file_list <- list.files("Fastloc_Raw")
 
 # Initialize the 'removed' dataframe
 removed <- data.frame()
@@ -19,7 +19,7 @@ cleaned_data <- list()
 # Loop through each file in the list
 for(file in file_list) {
   # Construct the full file path
-  file_path <- file.path("/Users/tamsin/Files/Manuscript/Data/Fastloc_Raw", file)
+  file_path <- file.path("Fastloc_Raw", file)
   # Read the data frame from the file
   df <- read.csv(file_path) 
   
@@ -102,7 +102,7 @@ df_252778 <- cleaned_data$"df_252778"
 ## SUBSET TO DATA OF INTEREST ==================================================
 # Remove data following detachment, or exit from study boundaries (visually identified)
 # Define the file path directory
-path <- "/Users/tamsin/Files/Manuscript/Data/Fastloc_Processing/"
+path <- "Fastloc_Processing/"
 
 # Save each dataframe as CSV to inspect movement relative to study boundaries
 write.csv(df_177767, paste0(path, "df_177767.csv"), row.names = FALSE)
@@ -164,7 +164,7 @@ df_252528 <- df_252528 %>% filter(datetime <= cutoff_252528)
 # Must follow criteria = 15+ locations within study area
 
 # Define the file path directory
-path <- "/Users/tamsin/Files/Manuscript/Data/Fastloc_Cleaned/"
+path <- "Fastloc_Cleaned/"
 
 # Save each dataframe individually
 write.csv(df_204511, paste0(path, "df_204511.csv"), row.names = FALSE)
@@ -199,7 +199,7 @@ all_data <- bind_rows(
 write.csv(all_data, paste0(path, "all_data.csv"), row.names = FALSE)
 
 # as RDA file for working
-setwd("/Users/tamsin/Files/Manuscript/RDA_files") #Set working directory to save RDA file
+setwd("RDA_files") #Set working directory to save RDA file
 
 save(
      df_204511,
