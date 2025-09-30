@@ -3,7 +3,7 @@
 library(suncalc); library(lubridate); library(dplyr); library(tidyverse)
 
 #Set working directory
-setwd("/Users/tamsin/Files/Manuscript/RDA_files") 
+setwd("RDA_files") 
 # Load in the data 
 load("vertical01.RDA")
 
@@ -251,7 +251,7 @@ tad.plot <- ggplot() +
   scale_y_continuous(labels = abs, limits = c(-100, 100), breaks = seq(-100, 100, by = 20)) +
   coord_flip() 
 
-ggsave("/Users/tamsin/Files/Manuscript/Figures/figure_5.tiff", 
+ggsave("figure_5.tiff", 
        plot = tad.plot, width = 8.3, height = 5.5, units = "in", dpi = 1000)
 
 
@@ -267,7 +267,7 @@ mann_whitney_test <- wilcox.test(day_0_5, night_0_5, alternative = "two.sided", 
 print(mann_whitney_test)
 
 ## SAVE FILE ===================================================================
-setwd("/Users/tamsin/Files/Manuscript/RDA_files") #Set working directory to save RDA file
+setwd("RDA_files") #Set working directory to save RDA file
 
 save(df_197235, 
      df_204511,
