@@ -3,7 +3,7 @@
 library(diveMove); library(suncalc); library(lubridate); library(dplyr); library(tidyverse)
 
 #Set working directory
-setwd("/Users/tamsin/Files/Manuscript/RDA_files") 
+setwd("RDA_files") 
 # Load in the data 
 load("vertical02.RDA")
 
@@ -222,7 +222,7 @@ divestats_252779 <- merge(divestats_252779, sun_252779, by.x = "utc.date", by.y 
 
 
 
-setwd("/Users/tamsin/Files/Manuscript/RDA_files") #Set working directory to save RDA file
+setwd("RDA_files") #Set working directory to save RDA file
 save(divestats_238016,divestats_197235,divestats_252779, file = "vertical2b.RDA")
 
 ## GAM =========================================================================
@@ -499,7 +499,7 @@ day <- ( a | b | c | d | e | f ) +
 # Display the combined plot
 day
 
-ggsave("/Users/tamsin/Files/Manuscript/Figures/figure 7.tiff", 
+ggsave("figure 7.tiff", 
        plot = day, width = 8.3, height = 10, units = "in", dpi = 1000)
 
 
@@ -651,6 +651,6 @@ night <- ( a2 | b2 | c2 | d2 | e2 | f2 ) +
 # Display the combined plot
 night
 
-ggsave("/Users/tamsin/Files/Manuscript/Figures/figure 8.tiff", 
+ggsave("figure 8.tiff", 
        plot = night, width = 8.3, height = 10, units = "in", dpi = 1000)
 
