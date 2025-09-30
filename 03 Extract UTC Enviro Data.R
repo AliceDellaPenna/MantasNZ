@@ -3,7 +3,7 @@
 library(suncalc); library(geosphere); library(dplyr); library(lubridate); library(readr)
 
 #Set working directory
-setwd("/Users/tamsin/Files/Manuscript/RDA_files") 
+setwd("/RDA_files") 
 # Load in the data from 02 State Space Modelling output
 load("horizontal02.RDA")
 
@@ -18,7 +18,7 @@ load("horizontal02.RDA")
 
 # This data is collected in UTC - Important that data is also in UTC. 
 # Import data frame including weather stations with lat lon coordinates
-weather_stations <- read.csv("/Users/tamsin/Files/Manuscript/Data/Environmental/Wind/wind_stations.csv")
+weather_stations <- read.csv("wind_stations.csv")
 
 # Find closest weather station for each manta GPS point: -----------------------
 # Function to calculate distance in meters between two GPS points
@@ -131,7 +131,7 @@ manta_df <- rbind(
 # This data is collected in GMT/UTC - Important that data is also in UTC.
 
 # Import data frame with tidal station coordinates
-tidal_stations <- read.csv("/Users/tamsin/Files/Manuscript/Data/Environmental/Tide/Tide_Stations.csv")
+tidal_stations <- read.csv("Tide_Stations.csv")
 
 # Calculate closest tide station for each manta GPS point
 calculate_distance <- function(lat1, lon1, lat2, lon2) { # Calculate Distances
@@ -150,7 +150,7 @@ manta_df$Closest_Tide_Station <- sapply(1:nrow(manta_df), function(i) { # Find C
 
 ### Load in tide data:----------------------------------------------------------
 # Define the directory where tide CSV files are located
-input_dir <- "/Users/tamsin/Files/Manuscript/Data/Environmental/Tide/tide_compiled_csv/"
+input_dir <- "tide_compiled_csv/"
 
 # Initialize an empty list to store the data frames
 tide_data <- list()
@@ -168,7 +168,7 @@ for (i in 1:37) {
 }
 
 # Filter manta_df data for each tide station individually
-for (station_num in 1:37) {  # Assuming you have 21 tidal stations
+for (station_num in 1:37) {  # Assuming you have 37 tidal stations
   # Get the data frame for the current tide station
   current_tide_data <- manta_df[manta_df$Closest_Tide_Station == station_num, ]
   
@@ -249,6 +249,6 @@ manta_df <- merge(manta_df, sun[, c("date", "lat", "lon", "altitude")], by.x = c
 
 
 ## CLEAN AND SAVE DATA  ========================================================
-setwd("/Users/tamsin/Files/Manuscript/RDA_Files/") #Set working directory to save RDA file
+setwd("RDA_Files/") #Set working directory to save RDA file
 save(manta_df, file = "horizontal03.RDA")
 
