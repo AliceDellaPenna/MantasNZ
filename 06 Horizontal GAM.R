@@ -10,7 +10,7 @@ library(mgcv); library(corrplot); library(fitdistrplus); library(readr); library
 library(patchwork); library(gratia)
 
 # Load in the data
-setwd("/Users/tamsin/Files/Manuscript/RDA_files")
+setwd("RDA_files")
 load("horizontal05.RDA")
 manta_df$g <- 1 - manta_df$g # Transform g so it is 1-g so that we are looking at predictors of foraging rather than of travelling
 
@@ -327,10 +327,10 @@ combined_plot_d <- (a | b | c | d  | e | f | g | h| i | j ) +
 # Display the combined plot
 combined_plot_d
 
-ggsave("/Users/tamsin/Files/Manuscript/Figures/figure_3.tiff", 
+ggsave("figure_3.tiff", 
        plot = combined_plot_d, width = 8.3, height = 10, units = "in", dpi = 1000)
 
-setwd("/Users/tamsin/Files/Manuscript/Figures/") #Set working directory to save RDA file
+setwd("Figures/") #Set working directory to save RDA file
 save.image(file = "Final3.RDA")
 
 ## ===== VISUALISING GAM (NIGHT) =================================================
@@ -581,9 +581,9 @@ combined_plot_n <- (a | b | c | d | e | f | g | h | i | j ) +
 # Display the combined plot
 combined_plot_n
 
-ggsave("/Users/tamsin/Files/Manuscript/Figures/figure_4.tiff", 
+ggsave("figure_4.tiff", 
        plot = combined_plot_n, width = 8.3, height = 10, units = "in", dpi = 1000)
 
-setwd("/Users/tamsin/Files/Manuscript/Figures/") #Set working directory to save RDA file
+setwd("Figures/") #Set working directory to save RDA file
 save.image(file = "Final4.RDA")
 
