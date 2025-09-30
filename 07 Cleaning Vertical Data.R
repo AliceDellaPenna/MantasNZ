@@ -6,7 +6,7 @@ library(purrr); library(tidyr)
 ## CLEAN DATA (UNRECOVERED TAGS) ===============================================
 
 # List all CSV files in the directory
-file_list <- list.files(path = "/Users/tamsin/Files/Manuscript/Data/Vertical_Unrecovered_Raw/", pattern = "\\.csv$", full.names = TRUE)
+file_list <- list.files(path = "Vertical_Unrecovered_Raw/", pattern = "\\.csv$", full.names = TRUE)
 
 # Loop through each file
 for (file in file_list) {
@@ -45,7 +45,7 @@ for (file in file_list) {
 ## CLEAN DATA (RECOVERED TAGS) =================================================
 
 # List all CSV files in the directory
-file_list <- list.files(path = "/Users/tamsin/Files/Manuscript/Data/Vertical_Recovered_Raw", pattern = "\\.csv$", full.names = TRUE)
+file_list <- list.files(path = "Vertical_Recovered_Raw", pattern = "\\.csv$", full.names = TRUE)
 
 # Create an empty list to store data frames
 recovered_dfs <- list()
