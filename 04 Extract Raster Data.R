@@ -2,7 +2,7 @@
 # Load required libraries
 library(raster); library(ncdf4)
 
-setwd("/Users/tamsin/Files/Manuscript/RDA_files") #Set working directory
+setwd("RDA_files") #Set working directory
 load("horizontal03.RDA")
 
 # Create a layername column to match to the rasterstack 
@@ -16,10 +16,10 @@ manta_df$layername2 <- as.character(manta_df$layername2)
 
 ## KD490 =======================================================================
 # Set your working directory
-setwd("/Users/tamsin/Files/Manuscript/Data/Environmental/KD490")
+setwd("KD490")
 
 # List the files in the .nc folder 
-kd.list = list.files("/Users/tamsin/Files/Manuscript/Data/Environmental/KD490", 
+kd.list = list.files("KD490", 
                      pattern = '.nc$', all.files=TRUE, full.names = FALSE)
 
 # Import all .nc files in the folder - lapply with raster so we import as raster layers 
@@ -47,7 +47,7 @@ manta_df$kd490 <- raster::extract(kdrasters, cbind(manta_df$lon, manta_df$lat))[
 
 ## BATHY =======================================================================
 # Read the TIF file as a raster layer
-bathy_raster <- raster("/Users/tamsin/Files/Manuscript/Data/Environmental/Bathymetry/Hauraki_Bathymetry_20m.tif")
+bathy_raster <- raster("Hauraki_Bathymetry_20m.tif")
 
 # Check the raster layer format
 names(bathy_raster)
@@ -61,7 +61,8 @@ plot(bathy_raster[[1]])
 manta_df$bathy <- raster::extract(bathy_raster, cbind(manta_df$lon, manta_df$lat))
 
 ### Prepare bathymetry data for out of gulf ------------------------------------
-bathyoog <- raster("/Users/tamsin/Files/Manuscript/Data/Environmental/Bathymetry/Gebco_Bathymetry.tif")
+# * Different sources used to take advantage of higher resolution of data available within the gulf, but unavailable outside that area
+bathyoog <- raster("Gebco_Bathymetry.tif")
 
 # Check the raster layer format
 names(bathyoog)
@@ -83,10 +84,10 @@ manta_df$bathy[manta_df$bathy > 1] <- 0
 
 ## SST =========================================================================
 # Set your working directory
-setwd("/Users/tamsin/Files/Manuscript/Data/Environmental/SST")
+setwd("SST")
 
 # List the files in the .nc folder
-sst.list <- list.files("/Users/tamsin/Files/Manuscript/Data/Environmental/SST", pattern = '.nc$', full.names = TRUE)
+sst.list <- list.files("SST", pattern = '.nc$', full.names = TRUE)
 
 # Initialize an empty list to store the individual raster layers
 sstrasters <- list()
@@ -152,6 +153,6 @@ manta_df$sst <- raster::extract(sstmean, cbind(manta_df$lon, manta_df$lat))[
 manta_df$sst <- manta_df$sst - 273.15
 
 ## SAVE FILE ===================================================================
-setwd("/Users/tamsin/Files/Manuscript/RDA_files") #Set working directory to save RDA file
+setwd("RDA_files") #Set working directory to save RDA file
 save(manta_df, file = "horizontal04.RDA")
 
