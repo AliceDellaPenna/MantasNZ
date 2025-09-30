@@ -5,7 +5,7 @@ library(rnaturalearth); library(rnaturalearthdata); library(rnaturalearthhires)
 library(dplyr); library(pathroutr); library(sf)
 
 #Set working directory
-setwd("/Users/tamsin/Files/Manuscript/RDA_files")
+setwd("RDA_files")
 load("horizontal01.RDA")
 
 ## STATE SPACE MODELLING =======================================================
@@ -23,12 +23,12 @@ ssm_all <-
 ssm_all_df <- grab(ssm_all, what = "predicted", as_sf = FALSE)
 
 ## REROUTING THE DATA ==========================================================
-# For when wrapper function in aniMotum package doesn't work due to complexity of study area
+# Used as wrapper function in aniMotum package doesn't work due to complexity of study area
 # Code replicated from Harbour Seal Vignette to reroute data around land (London)
 
 # Prep -------------------------------------------------------------------------
 # Read in the NZ coastlines shapefile
-nzcoast <- sf::read_sf("/Users/tamsin/Files/Manuscript/QGIS/Shapefiles/NZ Coastlines and Islands/nz-coastlines-and-islands-polygons-4326.shp")
+nzcoast <- sf::read_sf("nz-coastlines-and-islands-polygons-4326.shp")
 nzcoast <- sf::st_make_valid(nzcoast)
 
 # Convert the data frame to an sf object
@@ -155,8 +155,8 @@ manta_df <- left_join(rerouted_df, manta_mp_df %>% dplyr::select(datetime, id, g
 
 ## SAVE FILE ===================================================================
 # Save to csv
-write.csv(manta_df, "/Users/tamsin/Files/Manuscript/Data/SSM.csv")
+write.csv(manta_df, "SSM.csv")
 
-setwd("/Users/tamsin/Files/Manuscript/RDA_files") #Set working directory to save RDA file
+setwd("RDA_files") #Set working directory to save RDA file
 save(manta_df, file = "horizontal02.RDA")
 
